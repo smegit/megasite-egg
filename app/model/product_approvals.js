@@ -1,15 +1,15 @@
 'use strict';
 
-const Approval = require('./approval');
-const Product = require('./product');
 module.exports = app => {
-    const { INTEGER } = app.Sequelize;
+    const { INTEGER, DATE } = app.Sequelize;
 
-    
+
     const ProductApproval = app.model.define('product_approvals', {
         id: { type: INTEGER, primaryKey: true, autoIncrement: true },
         product_id: { type: INTEGER },
-        approval_id:  { type: INTEGER },
+        approval_id: { type: INTEGER },
+        created_at: DATE,
+        updated_at: DATE,
     });
 
     // Approval.belongsToMany(Product);

@@ -3,7 +3,7 @@
 const Service = require('egg').Service;
 
 class Product extends Service {
-    async list({offset = 0, limit = 10}) {
+    async list({ offset = 0, limit = 10 }) {
         const { ctx } = this;
         return ctx.model.Product.findAndCountAll({
             offset,
@@ -14,6 +14,8 @@ class Product extends Service {
     async find(id) {
         const { ctx } = this;
         const product = await ctx.model.Product.findByPk(id);
+        const approval = await product.getApprovals();
+        console.info(approval);
         if (!product) {
             ctx.throw(404, 'product not found');
         }
@@ -37,7 +39,7 @@ class Product extends Service {
     async destroy(id) {
         const { ctx } = this;
         const product = await ctx.model.Product.findByPk(id);
-        if(!product) {
+        if (!product) {
             ctx.throw(404, 'product not found');
         }
         return product.destroy();

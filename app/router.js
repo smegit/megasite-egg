@@ -25,9 +25,26 @@ module.exports = app => {
   router.post('/api/product', app.jwt, controller.product.create);
   router.put('/api/product/:id', app.jwt, controller.product.update);
   router.delete('/api/product/:id', app.jwt, controller.product.destroy);
+  // get associated approvals
+  router.get('/api/product/:id/approval', app.jwt, controller.product.findItsApproval);
 
   //router.resources('product', '/product', controller.product);
-  router.resources('approval', '/approval', controller.approval);
-  router.get('/product/:id/approval', controller.product.findItsApproval)
+
+  // routes for approvals
+  router.get('/api/approval', app.jwt, controller.approval.index);
+  router.get('/api/approval/:id', app.jwt, controller.approval.show)
+  router.post('/api/approval', app.jwt, controller.approval.create);
+  router.put('/api/approval/:id', app.jwt, controller.approval.update);
+  router.delete('/api/approval/:id', app.jwt, controller.approval.destroy);
+  //router.resources('approval', '/approval', controller.approval);
+  router.get('/api/approval/:id/product', controller.approval.findItsProduct);
+
+  // operations to attachments being attached to an approval
+  router.get('/api/approval/:id/attachment', controller.approval.findItsAttachment);
+  router.delete('/api/approval/:id/attachment/:a_id', controller.approval.deleteItsAttachment);
+
+  // routes for upload
+  router.post('/api/upload/approval', app.jwt, controller.upload.approval);
+
 
 };

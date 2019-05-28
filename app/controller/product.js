@@ -12,7 +12,7 @@ class ProductController extends Controller {
     }
 
     async index() {
-        const { ctx } =  this;
+        const { ctx } = this;
         const query = {
             limit: ctx.helper.parseInt(ctx.query.limit),
             offset: ctx.helper.parseInt(ctx.query.offset),
@@ -24,7 +24,7 @@ class ProductController extends Controller {
     async show() {
         const { ctx } = this;
         const id = ctx.helper.parseInt(ctx.params.id);
-        ctx.body =  await ctx.service.product.find(id);
+        ctx.body = await ctx.service.product.find(id);
     }
 
     async create() {
@@ -59,9 +59,9 @@ class ProductController extends Controller {
         const id = ctx.helper.parseInt(ctx.params.id);
         const product = await ctx.model.Product.findByPk(id);
         console.info(product);
-        const res = product.getApproval();
+        const res = await product.getApprovals();
         ctx.body = res;
-        
+
     }
 
 }

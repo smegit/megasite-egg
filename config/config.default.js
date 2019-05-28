@@ -1,6 +1,9 @@
 /* eslint valid-jsdoc: "off" */
 
 'use strict';
+const path = require('path');
+const os = require('os');
+
 
 /**
  * @param {Egg.EggAppInfo} appInfo app info
@@ -52,7 +55,19 @@ module.exports = appInfo => {
     secret: 'Great4-M',
     enable: true, // default is false
     match: '/jwt', // optional
-  }
+  };
+
+  config.multipart = {
+    fileSize: '10mb',
+    mode: 'file',
+    whitelist: [
+      '.pdf'
+    ],
+    tmpdir: path.join(os.tmpdir(), 'upload-tmp', appInfo.name),
+    cleanSchedule: {
+      cron: '0 30 4 * * *',
+    }
+  };
 
   return {
     ...config,
