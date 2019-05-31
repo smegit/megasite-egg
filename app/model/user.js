@@ -3,7 +3,7 @@
 module.exports = app => {
   const { STRING, INTEGER, DATE } = app.Sequelize;
 
-  const { product, approval, attachment } = app.model.models;
+  const { product, approval, attachment, category } = app.model.models;
 
   const User = app.model.define('user', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -21,5 +21,6 @@ module.exports = app => {
   // approval.belongsToMany(attachment, { through: 'approval_attachments', as: 'docs' });
   //console.info(app.model);
   approval.belongsToMany(attachment, { onDelete: 'cascade', through: 'approval_attachments', as: 'attachment' });
+  category.belongsToMany(attachment, { through: 'category_attachments', as: 'attachment' });
   return User;
 };

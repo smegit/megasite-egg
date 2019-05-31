@@ -47,4 +47,13 @@ module.exports = app => {
   router.post('/api/upload/approval', app.jwt, controller.upload.approval);
 
 
+  // routes for category
+  router.get('/api/category', app.jwt, controller.category.index);
+  router.get('/api/category/:id', app.jwt, controller.category.show)
+  router.post('/api/category', app.jwt, controller.category.create);
+  router.put('/api/category/:id', app.jwt, controller.category.update);
+  router.delete('/api/category/:id', app.jwt, controller.category.destroy);
+  router.delete('/api/category/:id/attachment/:a_id', controller.category.deleteItsAttachment);
+
+
 };

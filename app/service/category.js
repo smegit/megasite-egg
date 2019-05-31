@@ -5,12 +5,13 @@ const path = require('path');
 const pump = require('mz-modules/pump');
 const Service = require('egg').Service;
 
-const uploadPath = 'app/public/upload/approvals';
-class Approval extends Service {
+const uploadPath = 'app/public/upload/category';
+
+class Category extends Service {
     async list({ offset = 0, limit = 10 }) {
-        return this.ctx.model.Approval.findAndCountAll({
+        const { ctx } = this;
+        return ctx.model.Category.findAndCountAll({
             order: [
-                // Will escape title and validate DESC against a list of valid direction parameters
                 ['created_at', 'DESC']],
             offset: offset,
             limit: limit
@@ -19,70 +20,70 @@ class Approval extends Service {
 
     async find(id) {
         const { ctx } = this;
-        //const approval = await ctx.model.Approval.findByPk(id);
-        const approval = await ctx.model.Approval.findOne({
+        const category = await ctx.model.Category.findOne({
             where: { id: id },
             include: [
                 {
                     model: ctx.model.Attachment,
                     as: 'attachment',
-                    attributes: ['id', 'type', ['attachment', 'name'], 'url', 'uid'],
+                    attributes: ['id', 'type', ['attachment', 'name'], 'url', 'uid', 'description'],
                     through: { attributes: [] }
                 }
             ]
         });
-        if (!approval) {
-            ctx.throw(404, 'approval not found');
+        console.info(category);
+        if (!category) {
+            ctx.throw(404, 'category not found');
         }
-        // const attachment = approval.getDocs();
-        // console.info(attachment);
-
-        return approval;
+        return category;
     }
 
     async create(payload, files) {
         const { ctx } = this;
-        const approval = await ctx.model.Approval.create(payload);
+        const category = await ctx.model.Category.create(payload);
+        const fileAttributes = JSON.parse(payload.fileAttributes);
+
         // uploading files
         try {
-            for (const file of files) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
                 const targetPath = path.join(this.config.baseDir, uploadPath, file.filename);
                 const source = fs.createReadStream(file.filepath);
                 const target = fs.createWriteStream(targetPath);
                 await pump(source, target);
-                console.info(file);
                 ctx.logger.warn('save %s to %s', file.filepath, targetPath);
                 // add attachment
                 const obj = {
-                    type: 'ApprovalAttachment',
+                    type: 'CategoryAttachment',
                     attachment: file.filename,
-                    file_type: 'Approval Document',
-                    descriptioin: 'Approval Description',
+                    file_type: 'Category Image',
+                    description: fileAttributes[i].description,
                     url: targetPath,
                     uid: Math.random().toString(36).substring(7),
                 }
                 const attachment = await ctx.model.Attachment.create(obj);
                 console.info(attachment);
-                approval.addAttachment(attachment);
+                category.addAttachment(attachment);
             }
         } finally {
             // remove tmp files
             ctx.cleanupRequestFiles();
         }
-
-
-        return approval;
+        return category;
     }
 
     async update(id, payload, files) {
         const { ctx } = this;
-        const approval = await ctx.model.Approval.findByPk(id);
-        console.info(files);
-        if (!approval) {
-            ctx.throw(404, 'approval not found');
+        const category = await ctx.model.Category.findByPk(id);
+        const fileAttributes = JSON.parse(payload.fileAttributes);
+        if (!category) {
+            ctx.throw(404, 'category not found');
         }
+        console.info(payload);
+        console.info(fileAttributes);
         try {
-            for (const file of files) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
                 const targetPath = path.join(this.config.baseDir, uploadPath, file.filename);
                 const source = fs.createReadStream(file.filepath);
                 const target = fs.createWriteStream(targetPath);
@@ -90,58 +91,53 @@ class Approval extends Service {
                 ctx.logger.warn('save %s to %s', file.filepath, targetPath);
                 // add attachment
                 const obj = {
-                    type: 'ApprovalAttachment',
+                    type: 'CategoryAttachment',
                     attachment: file.filename,
-                    file_type: 'Approval Document',
-                    descriptioin: 'Approval Description',
+                    file_type: 'Category Image',
+                    description: fileAttributes[i].description,
                     url: targetPath,
                     uid: Math.random().toString(36).substring(7),
                 }
                 const attachment = await ctx.model.Attachment.create(obj);
                 console.info(attachment);
-                approval.addAttachment(attachment);
+                category.addAttachment(attachment);
             }
         } finally {
             // remove tmp files
             ctx.cleanupRequestFiles();
         }
-        return approval.update(payload);
+        return category.update(payload);
     }
 
     async destroy(id) {
         const { ctx } = this;
-        const approval = await ctx.model.Approval.findByPk(id);
-        if (!approval) {
-            ctx.throw(404, 'approval not found');
+        const category = await ctx.model.Category.findByPk(id);
+        if (!category) {
+            ctx.throw(404, 'category not found');
         }
 
-        const att = await approval.getAttachment();
-
-        approval.removeAttachment(att); // remove the link table queries
-        for (const attachment of att) { // remove the attachment table queries
+        const att = await category.getAttachment();
+        category.removeAttachment(att); // remove the link table queries
+        for (const attachment of att) {  // remove the attachment table queries
             attachment.destroy();
         }
-        return approval.destroy();
+        return category.destroy();
     }
 
     async deleteItsAttachment(id, attachment_id) {
         const { ctx } = this;
-        const approval = await ctx.model.Approval.findByPk(id);
+        const category = await ctx.model.Category.findByPk(id);
         const attachment = await ctx.model.Attachment.findByPk(attachment_id);
-        console.info(attachment);
-        console.info(approval);
-        if (!approval) {
-            ctx.throw(404, 'approval not found');
+        if (!category) {
+            ctx.throw(404, 'category not found');
         }
         if (!attachment) {
             ctx.throw(404, 'attachment not found');
         }
-        approval.removeAttachment(attachment);
+        category.removeAttachment(attachment);
         return attachment.destroy();
-        //approval.getDocs(attachment_id);
 
     }
-
 }
 
-module.exports = Approval;
+module.exports = Category;
