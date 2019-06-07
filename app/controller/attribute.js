@@ -8,14 +8,11 @@ function toInt(str) {
   return parseInt(str, 10) || 0;
 }
 
-class UserController extends Controller {
+class AttributeController extends Controller {
   constructor(ctx) {
     super(ctx);
-    this.UserCreateValidate = {
-      firstname: { type: 'string', required: true, allowEmpty: false },
-      surname: { type: 'string', required: true, allowEmpty: false },
-      email: { type: 'string', required: true, allowEmpty: false },
-      password: { type: 'password', required: true, allowEmpty: false },
+    this.AttributeCreateValidate = {
+      name: { type: 'string', required: true, allowEmpty: false },
     };
   }
   async index() {
@@ -24,21 +21,21 @@ class UserController extends Controller {
       limit: ctx.helper.parseInt(ctx.query.limit),
       offset: ctx.helper.parseInt(ctx.query.offset),
     };
-    const res = await ctx.service.user.list(query);
+    const res = await ctx.service.attribute.list(query);
     ctx.body = res;
   }
 
   async show() {
     const { ctx } = this;
     const id = ctx.helper.parseInt(ctx.params.id);
-    ctx.body = await ctx.service.user.find(id);
+    ctx.body = await ctx.service.attribute.find(id);
   }
 
   async create() {
     const { ctx, service } = this;
-    ctx.validate(this.UserCreateValidate);
+    ctx.validate(this.AttributeCreateValidate);
     const payload = ctx.request.body || {};
-    const res = await service.user.create(payload);
+    const res = await service.attribute.create(payload);
     ctx.body = res;
     ctx.status = 201;
   }
@@ -47,18 +44,24 @@ class UserController extends Controller {
     const { ctx, service } = this;
     const id = ctx.helper.parseInt(ctx.params.id);
     const payload = ctx.request.body || {};
-    const res = await service.user.update(id, payload);
+    const res = await service.attribute.update(id, payload);
     ctx.body = res;
     ctx.status = 201;
   }
 
   async destroy() {
-    const { ctx } = this;
+    const { ctx, service } = this;
     const id = ctx.helper.parseInt(ctx.params.id);
-    const res = await service.user.destroy(id);
+    const res = await service.attribute.destroy(id);
     ctx.body = res;
     ctx.status = 204;
   }
+
+  async getAll() {
+    const { ctx, service } = this;
+    const res = await service.attribute.getAll();
+    ctx.body = res;
+  }
 }
 
-module.exports = UserController;
+module.exports = AttributeController;

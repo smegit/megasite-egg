@@ -3,11 +3,12 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { INTEGER, DATE, STRING, TEXT } = Sequelize;
-    await queryInterface.createTable('categories', {
+    await queryInterface.createTable('attributes', {
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
       name: STRING(30),
       description: TEXT,
-      parent_id: INTEGER,
+      ui_type: STRING(30),
+      input_type: STRING(30),
       created_at: DATE,
       updated_at: DATE,
     });
@@ -15,6 +16,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('categories');
+    await queryInterface.dropTable('attributes');
   },
 };

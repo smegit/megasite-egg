@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { STRING, INTEGER, DATE, TEXT, NOW } = app.Sequelize;
+  const { STRING, INTEGER, DATE, TEXT } = app.Sequelize;
 
   const Approval = app.model.define('approval', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -28,8 +28,8 @@ module.exports = app => {
   });
 
   console.info('-------------------');
-  //console.info(app.model.models);
-  //Approval.belongsToMany(product, { through: 'ProductApprovals' });
+  // console.info(app.model.models);
+  // Approval.belongsToMany(product, { through: 'ProductApprovals' });
 
   return Approval;
 };

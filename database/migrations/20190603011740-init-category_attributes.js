@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { INTEGER, DATE, STRING, TEXT } = Sequelize;
-    await queryInterface.createTable('category_attachments', {
+    await queryInterface.createTable('category_attributes', {
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
       category_id: {
         type: INTEGER,
@@ -13,20 +13,21 @@ module.exports = {
         },
         allowNull: false,
       },
-      attachment_id: {
+      attribute_id: {
         type: INTEGER,
         references: {
-          model: 'attachments',
+          model: 'attributes',
           key: 'id',
         },
         allowNull: false,
       },
+      sort_order: { type: INTEGER },
       created_at: DATE,
       updated_at: DATE,
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('category_attachments');
+    await queryInterface.dropTable('category_attributes');
   },
 };

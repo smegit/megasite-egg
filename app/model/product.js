@@ -2,7 +2,7 @@
 
 const ProductApproval = require('./product_approvals').ProductApproval;
 module.exports = app => {
-  const { STRING, INTEGER, DATE } = app.Sequelize;
+  const { STRING, INTEGER, DATE, JSONB } = app.Sequelize;
   const { approval } = app.model.models;
 
   const Product = app.model.define('product', {
@@ -11,15 +11,14 @@ module.exports = app => {
     type: { type: STRING(30), required: true },
     description: { type: STRING },
     aesthetic: { type: STRING },
-    data: { type: JSON },
+    data: { type: JSONB },
     created_at: DATE,
     updated_at: DATE,
   });
 
   // console.info('--------------------------------');
-  //console.info(app.model.models);
+  // console.info(app.model.models);
   Product.belongsToMany(approval, { through: 'product_approvals' });
   return Product;
 };
-
 

@@ -9,17 +9,17 @@ module.exports = {
         type: INTEGER,
         references: {
           model: 'approvals',
-          key: 'id'
+          key: 'id',
         },
-        allowNull: false
+        allowNull: false,
       },
       attachment_id: {
         type: INTEGER,
         references: {
           model: 'attachments',
-          key: 'id'
+          key: 'id',
         },
-        allowNull: false
+        allowNull: false,
       },
       created_at: DATE,
       updated_at: DATE,
@@ -28,5 +28,5 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('approval_attachments');
-  }
+  },
 };

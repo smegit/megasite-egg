@@ -13,8 +13,8 @@ exports.validate = {
 
 exports.bcrypt = {
   enable: true,
-  package: 'egg-bcrypt'
-}
+  package: 'egg-bcrypt',
+};
 
 exports.cors = {
   enable: true,
@@ -23,11 +23,11 @@ exports.cors = {
 
 exports.jwt = {
   enable: true,
-  package: "egg-jwt"
+  package: 'egg-jwt',
 };
 
 exports.multipart = {
   enable: true,
-  package: "egg-multipart"
+  package: 'egg-multipart',
 };
 

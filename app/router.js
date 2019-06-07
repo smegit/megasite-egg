@@ -6,14 +6,14 @@
 module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
-  //router.resources('users', '/users', controller.users);
+  // router.resources('users', '/users', controller.users);
 
   // User Access
   router.post('/api/user/access/login', controller.userAccess.login);
 
 
   router.get('/api/users', app.jwt, controller.users.index);
-  router.get('/api/users/:id', app.jwt, controller.users.show)
+  router.get('/api/users/:id', app.jwt, controller.users.show);
   router.post('/api/users', app.jwt, controller.users.create);
   router.put('/api/users/:id', app.jwt, controller.users.update);
   router.delete('/api/users/:id', app.jwt, controller.users.destroy);
@@ -21,22 +21,22 @@ module.exports = app => {
 
   // routes for products
   router.get('/api/product', app.jwt, controller.product.index);
-  router.get('/api/product/:id', app.jwt, controller.product.show)
+  router.get('/api/product/:id', app.jwt, controller.product.show);
   router.post('/api/product', app.jwt, controller.product.create);
   router.put('/api/product/:id', app.jwt, controller.product.update);
   router.delete('/api/product/:id', app.jwt, controller.product.destroy);
   // get associated approvals
   router.get('/api/product/:id/approval', app.jwt, controller.product.findItsApproval);
 
-  //router.resources('product', '/product', controller.product);
+  // router.resources('product', '/product', controller.product);
 
   // routes for approvals
   router.get('/api/approval', app.jwt, controller.approval.index);
-  router.get('/api/approval/:id', app.jwt, controller.approval.show)
+  router.get('/api/approval/:id', app.jwt, controller.approval.show);
   router.post('/api/approval', app.jwt, controller.approval.create);
   router.put('/api/approval/:id', app.jwt, controller.approval.update);
   router.delete('/api/approval/:id', app.jwt, controller.approval.destroy);
-  //router.resources('approval', '/approval', controller.approval);
+  // router.resources('approval', '/approval', controller.approval);
   router.get('/api/approval/:id/product', controller.approval.findItsProduct);
 
   // operations to attachments being attached to an approval
@@ -49,11 +49,20 @@ module.exports = app => {
 
   // routes for category
   router.get('/api/category', app.jwt, controller.category.index);
-  router.get('/api/category/:id', app.jwt, controller.category.show)
+  router.get('/api/category/all', app.jwt, controller.category.getAll);
+  router.get('/api/category/:id', app.jwt, controller.category.show);
+  router.get('/api/category/:id/attribute', app.jwt, controller.category.getItsAttribute);
   router.post('/api/category', app.jwt, controller.category.create);
   router.put('/api/category/:id', app.jwt, controller.category.update);
   router.delete('/api/category/:id', app.jwt, controller.category.destroy);
   router.delete('/api/category/:id/attachment/:a_id', controller.category.deleteItsAttachment);
 
+  // routes for attribute
+  router.get('/api/attribute', app.jwt, controller.attribute.index);
+  router.get('/api/attribute/all', app.jwt, controller.attribute.getAll);
+  router.get('/api/attribute/:id', app.jwt, controller.attribute.show);
+  router.post('/api/attribute', app.jwt, controller.attribute.create);
+  router.put('/api/attribute/:id', app.jwt, controller.attribute.update);
+  router.delete('/api/attribute/:id', app.jwt, controller.attribute.destroy);
 
 };
