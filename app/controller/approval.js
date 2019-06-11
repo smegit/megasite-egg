@@ -81,7 +81,7 @@ class ApprovalController extends Controller {
     // const attachments = await approval.getAttachment();
     console.info(approval);
     const attachment = await approval.getAttachment({
-      attributes: [ 'id', 'type', 'url', [ 'attachment', 'name' ], 'uid' ],
+      attributes: ['id', 'type', 'url', ['attachment', 'name'], 'uid'],
       through: { attributes: [] },
     });
     ctx.body = attachment;
@@ -97,6 +97,15 @@ class ApprovalController extends Controller {
     ctx.body = res;
     ctx.status = 204;
     // console.info(ctx.params);
+  }
+
+  // get all approval
+  async getAll() {
+    console.info('getAll called');
+    const { ctx, service } = this;
+    const res = await service.approval.getAll();
+    ctx.body = res;
+    ctx.status = 200;
   }
 
 }

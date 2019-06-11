@@ -18,7 +18,7 @@ module.exports = app => {
 
   // console.info('--------------------------------');
   // console.info(app.model.models);
-  Product.belongsToMany(approval, { through: 'product_approvals' });
+  Product.belongsToMany(approval, { through: 'product_approvals', as: 'approval' });
   return Product;
 };
 

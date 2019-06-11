@@ -17,7 +17,7 @@ module.exports = app => {
     updated_at: DATE,
   });
   // console.info(app.model.models);
-  approval.belongsToMany(product, { through: 'product_approvals' });
+  approval.belongsToMany(product, { through: 'product_approvals', as: 'approval' });
   // approval.belongsToMany(attachment, { through: 'approval_attachments', as: 'docs' });
   // console.info(app.model);
   approval.belongsToMany(attachment, { onDelete: 'cascade', through: 'approval_attachments', as: 'attachment' });

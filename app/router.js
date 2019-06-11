@@ -27,11 +27,13 @@ module.exports = app => {
   router.delete('/api/product/:id', app.jwt, controller.product.destroy);
   // get associated approvals
   router.get('/api/product/:id/approval', app.jwt, controller.product.findItsApproval);
+  router.delete('/api/product/:id/attachment/:a_id', controller.product.deleteItsAttachment);
 
   // router.resources('product', '/product', controller.product);
 
   // routes for approvals
   router.get('/api/approval', app.jwt, controller.approval.index);
+  router.get('/api/approval/all', app.jwt, controller.approval.getAll);
   router.get('/api/approval/:id', app.jwt, controller.approval.show);
   router.post('/api/approval', app.jwt, controller.approval.create);
   router.put('/api/approval/:id', app.jwt, controller.approval.update);

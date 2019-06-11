@@ -6,6 +6,7 @@ module.exports = app => {
   const Attribute = app.model.define('attribute', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     name: STRING(30),
+    label: STRING(30),
     description: TEXT,
     input_type: STRING(30),
     ui_type: STRING(30),

@@ -11,7 +11,7 @@ class Approval extends Service {
     return this.ctx.model.Approval.findAndCountAll({
       order: [
         // Will escape title and validate DESC against a list of valid direction parameters
-        [ 'created_at', 'DESC' ]],
+        ['created_at', 'DESC']],
       offset,
       limit,
     });
@@ -26,7 +26,7 @@ class Approval extends Service {
         {
           model: ctx.model.Attachment,
           as: 'attachment',
-          attributes: [ 'id', 'type', [ 'attachment', 'name' ], 'url', 'uid' ],
+          attributes: ['id', 'type', ['attachment', 'name'], 'url', 'uid'],
           through: { attributes: [] },
         },
       ],
@@ -140,6 +140,13 @@ class Approval extends Service {
     return attachment.destroy();
     // approval.getDocs(attachment_id);
 
+  }
+
+  async getAll() {
+    const { ctx } = this;
+    return ctx.model.Approval.findAll({
+      attributes: ['id', 'approval_type', 'approval_no']
+    });
   }
 
 }

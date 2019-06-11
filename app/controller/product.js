@@ -44,7 +44,8 @@ class ProductController extends Controller {
     const id = ctx.helper.parseInt(ctx.params.id);
     const payload = ctx.request.body || {};
     payload.data = JSON.parse(payload.data);
-    const res = await service.product.update(id, payload);
+    const files = ctx.request.files || [];
+    const res = await service.product.update(id, payload, files);
     ctx.body = res;
     ctx.status = 201;
   }
@@ -66,6 +67,16 @@ class ProductController extends Controller {
     const res = await product.getApprovals();
     ctx.body = res;
 
+  }
+
+  async deleteItsAttachment() {
+    console.info('deleteItsAttachment called');
+    const { ctx, service } = this;
+    const id = ctx.helper.parseInt(ctx.params.id);
+    const attachment_id = ctx.helper.parseInt(ctx.params.a_id);
+    const res = await service.product.deleteItsAttachment(id, attachment_id);
+    ctx.body = res;
+    ctx.status = 204;
   }
 
 }
