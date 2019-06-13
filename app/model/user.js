@@ -24,5 +24,9 @@ module.exports = app => {
   category.belongsToMany(attachment, { through: 'category_attachments', as: 'attachment' });
   category.belongsToMany(attribute, { through: 'category_attributes', as: 'attribute' });
   product.belongsToMany(attachment, { through: 'product_attachments', as: 'attachment' });
+  // product.belongsToMany(category, { through: 'product_approvals', as: 'approval' });
+  product.belongsTo(category, { foreignKey: 'type', as: 'category' });
+  //category.hasMany(product, { foreignKey: 'type', as: 'cate_name' });
+
   return User;
 };

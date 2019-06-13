@@ -13,6 +13,10 @@ class Product extends Service {
       order: [['created_at', 'DESC']],
       offset,
       limit,
+      include: [{
+        model: ctx.model.Category,
+        as: 'category',
+      }]
     });
   }
 
