@@ -179,6 +179,25 @@ class Category extends Service {
     }
     return category.getAttribute();
   }
+
+  async checkName(name) {
+    const { ctx } = this;
+    const { Op } = ctx.app.Sequelize;
+
+    const category = await ctx.model.Category.findOne({
+      where: {
+        name: {
+          [Op.iLike]: `${name}`
+        }
+      },
+    });
+    if (category) {
+      ctx.throw(422, `Category ${name} already exist.`);
+    }
+    return {
+      success: true,
+    }
+  }
 }
 
 module.exports = Category;

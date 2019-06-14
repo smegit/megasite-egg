@@ -12,10 +12,12 @@ class ProductController extends Controller {
   }
 
   async index() {
+    console.info('index called ----------------------');
     const { ctx } = this;
     const query = {
       limit: ctx.helper.parseInt(ctx.query.limit),
       offset: ctx.helper.parseInt(ctx.query.offset),
+      search: ctx.query.query || {}
     };
     const res = await ctx.service.product.list(query);
     ctx.body = res;
@@ -77,6 +79,14 @@ class ProductController extends Controller {
     const res = await service.product.deleteItsAttachment(id, attachment_id);
     ctx.body = res;
     ctx.status = 204;
+  }
+
+  async checkModel() {
+    const { ctx, service } = this;
+    const model_number = ctx.params.model_number;
+    const res = await service.product.checkModel(model_number);
+    ctx.body = res;
+    ctx.status = 200;
   }
 
 }

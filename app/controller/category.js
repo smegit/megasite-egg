@@ -73,6 +73,14 @@ class CategoryController extends Controller {
     ctx.status = 200;
   }
 
+  async checkName() {
+    const { ctx, service } = this;
+    const name = ctx.params.name;
+    const res = await service.category.checkName(name);
+    ctx.body = res;
+    ctx.status = 200;
+  }
+
 }
 
 module.exports = CategoryController;

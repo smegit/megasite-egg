@@ -4,12 +4,37 @@ const fs = require('mz/fs');
 const path = require('path');
 const pump = require('mz-modules/pump');
 const Service = require('egg').Service;
+//const Op = app.Sequelize.Op;
 
 const uploadPath = 'app/public/upload/product';
 class Product extends Service {
-  async list({ offset = 0, limit = 10 }) {
+  async list({ offset = 0, limit = 10, search = {} }) {
+    console.info('list called -------------');
     const { ctx } = this;
+    const { Op } = ctx.app.Sequelize;
+    // const whereClause = {};
+
+    // for (var key in search) {
+    //   if (search.hasOwnProperty(key)) {
+    //     search[key] = { $like: `%${search[key]}%` };
+    //   }
+    // }
+    console.info(search);
+    search = JSON.parse(search);
+    // let queryObj = {
+    //   ...search.type && { type: { $like: `${search.type}` } },
+    //   ...search.model_number && { model_number: search.model_number },
+    // };
+    // console.info(JSON.stringify(queryObj));
+    // queryObj = JSON.stringify(queryObj);
+
     return ctx.model.Product.findAndCountAll({
+      // where: { model_number: { [Op.like]: '%PA7395%' } },
+      where: {
+        ...search.model_number && { model_number: { [Op.like]: `%${search.model_number}%` } },
+        ...search.type && { type: search.type },
+        ...search.description && { description: { [Op.like]: `%${search.description}%` } },
+      },
       order: [['created_at', 'DESC']],
       offset,
       limit,
@@ -175,6 +200,25 @@ class Product extends Service {
     product.removeAttachment(attachment);
     return attachment.destroy();
   }
+
+  async checkModel(model_number) {
+    const { ctx } = this;
+    const { Op } = ctx.app.Sequelize;
+    const product = await ctx.model.Product.findOne({
+      where: {
+        model_number: {
+          [Op.iLike]: `${model_number}`
+        }
+      },
+    });
+    if (product) {
+      ctx.throw(422, `Product ${model_number} already exist.`);
+    }
+    return {
+      success: true,
+    }
+  }
+
 }
 
 module.exports = Product;

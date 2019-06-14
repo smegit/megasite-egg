@@ -19,7 +19,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1554420099092_3888';
 
   // add your middleware config here
-  config.middleware = [ 'errorHandler' ];
+  config.middleware = ['errorHandler'];
 
   // add your user config here
   const userConfig = {
@@ -30,7 +30,7 @@ module.exports = appInfo => {
     csrf: {
       enable: false,
     },
-    domainWhiteList: [ 'http://localhost:4300', 'http://127.0.0.1:4300' ],
+    domainWhiteList: ['http://localhost:4300', 'http://127.0.0.1:4300'],
   };
   config.cors = {
     origin: '*',
@@ -41,15 +41,16 @@ module.exports = appInfo => {
     saltRounds: 10,
   },
 
-  // database config
-  config.sequelize = {
-    dialect: 'postgres',
-    host: '127.0.0.1',
-    port: 5432,
-    database: 'smeg_development',
-    username: 'deploy',
-    password: 'password',
-  };
+    // database config
+    config.sequelize = {
+      dialect: 'postgres',
+      // host: '127.0.0.1',
+      host: '10.1.1.123',
+      port: 5432,
+      database: 'smeg_development',
+      username: 'deploy',
+      password: 'password',
+    };
 
   config.jwt = {
     secret: 'Great4-M',

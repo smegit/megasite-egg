@@ -27,7 +27,8 @@ module.exports = app => {
   router.delete('/api/product/:id', app.jwt, controller.product.destroy);
   // get associated approvals
   router.get('/api/product/:id/approval', app.jwt, controller.product.findItsApproval);
-  router.delete('/api/product/:id/attachment/:a_id', controller.product.deleteItsAttachment);
+  router.delete('/api/product/:id/attachment/:a_id', app.jwt, controller.product.deleteItsAttachment);
+  router.get('/api/product/check/:model_number', app.jwt, controller.product.checkModel);
 
   // router.resources('product', '/product', controller.product);
 
@@ -58,7 +59,7 @@ module.exports = app => {
   router.put('/api/category/:id', app.jwt, controller.category.update);
   router.delete('/api/category/:id', app.jwt, controller.category.destroy);
   router.delete('/api/category/:id/attachment/:a_id', controller.category.deleteItsAttachment);
-
+  router.get('/api/category/check/:name', app.jwt, controller.category.checkName);
   // routes for attribute
   router.get('/api/attribute', app.jwt, controller.attribute.index);
   router.get('/api/attribute/all', app.jwt, controller.attribute.getAll);
