@@ -3,7 +3,7 @@
 module.exports = app => {
   const { STRING, INTEGER, DATE } = app.Sequelize;
 
-  const { product, approval, attachment, category, attribute } = app.model.models;
+  const { product, approval, attachment, category, attribute, feature } = app.model.models;
 
   const User = app.model.define('user', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -27,6 +27,9 @@ module.exports = app => {
   // product.belongsToMany(category, { through: 'product_approvals', as: 'approval' });
   product.belongsTo(category, { foreignKey: 'type', as: 'category' });
   //category.hasMany(product, { foreignKey: 'type', as: 'cate_name' });
+
+  product.belongsToMany(feature, { through: 'product_features', as: 'feature' });
+
 
   return User;
 };

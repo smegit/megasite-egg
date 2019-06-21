@@ -68,4 +68,13 @@ module.exports = app => {
   router.put('/api/attribute/:id', app.jwt, controller.attribute.update);
   router.delete('/api/attribute/:id', app.jwt, controller.attribute.destroy);
 
+  // routes for feature
+  router.get('/api/feature', app.jwt, controller.feature.index);
+  // router.get('/api/feature/all', app.jwt, controller.feature.getAll);
+  router.get('/api/feature/:id', app.jwt, controller.feature.show);
+  router.post('/api/feature', app.jwt, controller.feature.create);
+  router.put('/api/feature/:id', app.jwt, controller.feature.update);
+  router.delete('/api/feature/:id', app.jwt, controller.feature.destroy);
+  router.get('/api/feature/check/:feature_name', app.jwt, controller.feature.checkName);
+  router.get('/api/feature/type/:f_type', app.jwt, controller.feature.getFeaturesByType)
 };

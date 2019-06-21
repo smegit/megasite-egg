@@ -31,9 +31,9 @@ class Product extends Service {
     return ctx.model.Product.findAndCountAll({
       // where: { model_number: { [Op.like]: '%PA7395%' } },
       where: {
-        ...search.model_number && { model_number: { [Op.like]: `%${search.model_number}%` } },
+        ...search.model_number && { model_number: { [Op.iLike]: `%${search.model_number}%` } },
         ...search.type && { type: search.type },
-        ...search.description && { description: { [Op.like]: `%${search.description}%` } },
+        ...search.description && { description: { [Op.iLike]: `%${search.description}%` } },
       },
       order: [['created_at', 'DESC']],
       offset,
@@ -62,10 +62,16 @@ class Product extends Service {
           attributes: ['id', 'approval_type', 'approval_no'],
           through: { attributes: [] },
         },
+        {
+          model: ctx.model.Feature,
+          as: 'feature',
+          attributes: ['id', 'name'],
+          through: { attributes: [] },
+        },
       ],
     });;
     const approval = await product.getApproval();
-    console.info(approval);
+    //console.info(approval);
     if (!product) {
       ctx.throw(404, 'product not found');
     }
@@ -76,6 +82,7 @@ class Product extends Service {
     const { ctx } = this;
     const fileAttributes = JSON.parse(payload.fileAttributes) || [];
     const approvalList = JSON.parse(payload.approval_list) || [];
+    const featureList = JSON.parse(payload.feature) || [];
     // delete payload.fileAttributes;
     // delete payload.attribute_list;
     console.info(payload);
@@ -112,6 +119,18 @@ class Product extends Service {
       where: { id: approvalList }
     });
     product.setApproval(approvals);
+
+    // create association of product-features
+    const existingFeaturesId = featureList.filter(e => Number.isInteger(e));
+    const newFeaturesObj = featureList.filter(e => !Number.isInteger(e)).map(e => {
+      return { name: e }
+    });
+    const features = await ctx.model.Feature.findAll({
+      where: { id: existingFeaturesId }
+    });
+    const newFeatures = await ctx.model.Feature.bulkCreate(newFeaturesObj, { returning: true });
+    product.setFeature(features);
+    product.addFeature(newFeatures);
     return product;
   }
 
@@ -119,6 +138,7 @@ class Product extends Service {
     const { ctx } = this;
     const approvalList = JSON.parse(payload.approval_list) || [];
     const fileAttributes = JSON.parse(payload.fileAttributes) || [];
+    const featureList = JSON.parse(payload.feature) || [];
     const product = await ctx.model.Product.findByPk(id);
     if (!product) {
       ctx.throw(404, 'product not found');
@@ -163,6 +183,18 @@ class Product extends Service {
       where: { id: approvalList }
     });
     product.setApproval(approvals);
+
+    // create association of product-features
+    const existingFeaturesId = featureList.filter(e => Number.isInteger(e));
+    const newFeaturesObj = featureList.filter(e => !Number.isInteger(e)).map(e => {
+      return { name: e }
+    });
+    const features = await ctx.model.Feature.findAll({
+      where: { id: existingFeaturesId }
+    });
+    const newFeatures = await ctx.model.Feature.bulkCreate(newFeaturesObj, { returning: true });
+    product.setFeature(features);
+    product.addFeature(newFeatures);
 
     return product.update(payload);
   }
@@ -212,7 +244,7 @@ class Product extends Service {
       },
     });
     if (product) {
-      ctx.throw(422, `Product ${model_number} already exist.`);
+      ctx.throw(422, `Product ${model_number} already exists.`);
     }
     return {
       success: true,
