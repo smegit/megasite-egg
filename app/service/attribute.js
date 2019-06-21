@@ -7,7 +7,7 @@ class Attribute extends Service {
     return this.ctx.model.Attribute.findAndCountAll({
       order: [
         // Will escape title and validate DESC against a list of valid direction parameters
-        [ 'created_at', 'DESC' ]],
+        ['created_at', 'DESC']],
       offset,
       limit,
     });

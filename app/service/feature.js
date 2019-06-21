@@ -3,8 +3,15 @@
 const Service = require('egg').Service;
 
 class Feature extends Service {
-  async list({ offset = 0, limit = 10 }) {
-    return this.ctx.model.Feature.findAndCountAll({
+  async list({ offset = 0, limit = 10, search = {} }) {
+    search = JSON.parse(search);
+    console.info(search);
+    const { ctx } = this;
+    const { Op } = ctx.app.Sequelize;
+    return ctx.model.Feature.findAndCountAll({
+      where: {
+        ...search.name && { name: { [Op.iLike]: `%${search.name}%` } }
+      },
       offset,
       limit,
       order: [['created_at', 'desc']],
