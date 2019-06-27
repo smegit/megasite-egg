@@ -39,18 +39,21 @@ module.exports = appInfo => {
 
   config.bcrypt = {
     saltRounds: 10,
-  },
+  };
 
-    // database config
-    config.sequelize = {
-      dialect: 'postgres',
-      //host: '127.0.0.1',
-      host: '10.1.1.123',
-      port: 5432,
-      database: 'smeg_development',
-      username: 'deploy',
-      password: 'password',
-    };
+  // config upload directory
+  // config.uploadDir = '/home/deploy/upload';
+  config.uploadDir = '/upload';
+  // database config
+  config.sequelize = {
+    dialect: 'postgres',
+    //host: '127.0.0.1',
+    host: '10.1.1.123',
+    port: 5432,
+    database: 'smeg_development',
+    username: 'deploy',
+    password: 'password',
+  };
 
   config.jwt = {
     secret: 'Great4-M',

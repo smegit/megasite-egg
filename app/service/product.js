@@ -6,7 +6,7 @@ const pump = require('mz-modules/pump');
 const Service = require('egg').Service;
 //const Op = app.Sequelize.Op;
 
-const uploadPath = 'app/public/upload/product';
+const uploadPath = '/upload/product';
 class Product extends Service {
   async list({ offset = 0, limit = 10, search = {} }) {
     console.info('list called -------------');
@@ -95,7 +95,7 @@ class Product extends Service {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const targetPath = path.join(this.config.baseDir, uploadPath, file.filename);
+        const targetPath = path.join(this.config.HOME, uploadPath, file.filename);
         const source = fs.createReadStream(file.filepath);
         const target = fs.createWriteStream(targetPath);
         await pump(source, target);
@@ -106,7 +106,8 @@ class Product extends Service {
           attachment: file.filename,
           file_type: fileAttributes[i].fileType,
           description: fileAttributes[i].description,
-          url: targetPath,
+          //url: targetPath,
+          url: `${uploadPath}/${file.filename}`,
           uid: Math.random().toString(36).substring(7),
         };
         const attachment = await ctx.model.Attachment.create(obj);
@@ -152,9 +153,10 @@ class Product extends Service {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const targetPath = path.join(this.config.baseDir, uploadPath, file.filename);
+        const targetPath = path.join(this.config.HOME, uploadPath, file.filename);
         const source = fs.createReadStream(file.filepath);
         const target = fs.createWriteStream(targetPath);
+        console.info(this.config);
         await pump(source, target);
         ctx.logger.warn('save %s to %s', file.filepath, targetPath);
         // add attachment
@@ -170,7 +172,7 @@ class Product extends Service {
           attachment: file.filename,
           file_type: fileAttributes[i].fileType,
           description: fileAttributes[i].description,
-          url: targetPath,
+          url: `${uploadPath}/${file.filename}`,
           uid: Math.random().toString(36).substring(7),
         };
         const attachment = await ctx.model.Attachment.create(obj);
