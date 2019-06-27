@@ -26,8 +26,8 @@ exports.jwt = {
   package: 'egg-jwt',
 };
 
-exports.multipart = {
-  enable: true,
-  package: 'egg-multipart',
-};
+// exports.multipart = {
+//   enable: true,
+//   package: 'egg-multipart',
+// };
 

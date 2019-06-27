@@ -51,6 +51,10 @@ class Product extends Service {
       where: { id },
       include: [
         {
+          model: ctx.model.Category,
+          as: 'category',
+        },
+        {
           model: ctx.model.Attachment,
           as: 'attachment',
           attributes: ['id', 'type', ['attachment', 'name'], 'description', 'url', 'uid'],

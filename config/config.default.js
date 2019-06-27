@@ -44,7 +44,7 @@ module.exports = appInfo => {
     // database config
     config.sequelize = {
       dialect: 'postgres',
-      // host: '127.0.0.1',
+      //host: '127.0.0.1',
       host: '10.1.1.123',
       port: 5432,
       database: 'smeg_development',

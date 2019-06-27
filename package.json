@@ -17,7 +17,8 @@
     "egg-validate": "^2.0.2",
     "mz": "^2.7.0",
     "mz-modules": "^2.1.0",
-    "pg": "^7.9.0"
+    "pg": "^7.9.0",
+    "sequelize-paper-trail": "^2.6.1"
   },
   "devDependencies": {
     "autod": "^3.0.1",

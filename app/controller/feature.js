@@ -1,6 +1,10 @@
 'use strict';
 
 const Controller = require('egg').Controller;
+//const Sequelize = require('sequelize');
+
+
+
 
 class FeatureController extends Controller {
   constructor(ctx) {
@@ -8,8 +12,15 @@ class FeatureController extends Controller {
     this.FeatureCreateValidate = {
       name: { type: 'string', required: true, allowEmpty: false },
     };
+    const sequelize = ctx.app.Sequelize;
+    console.info('--------------------sequelize')
+    //console.info(ctx.app.model);
+    // const PaperTrail = require('sequelize-paper-trail').init(ctx.app.model, { userModel: '', debug: true, enableRevisionChangeModel: true, enableCompression: true, enableMigration: true });
+    // PaperTrail.defineModels();
+    // ctx.model.Feature.Revisions = ctx.model.Feature.hasPaperTrail();
 
   }
+
 
   async index() {
     console.info('index called ----------------------');

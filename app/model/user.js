@@ -3,6 +3,7 @@
 module.exports = app => {
   const { STRING, INTEGER, DATE } = app.Sequelize;
 
+
   const { product, approval, attachment, category, attribute, feature } = app.model.models;
 
   const User = app.model.define('user', {
@@ -31,5 +32,41 @@ module.exports = app => {
   product.belongsToMany(feature, { through: 'product_features', as: 'feature' });
 
 
+  // define paper trails
+  // User.Revisions = User.hasPaperTail();
+
+  // const UserUser = sequelize.define('UserUser', {
+  //   username: Sequelize.STRING,
+  //   birthday: Sequelize.DATE
+  // });
+  //PaperTrail.defineModels();
+  //console.info(app.model);
+
+  // const PaperTrail = require('sequelize-paper-trail').init(app.model, { userModel: 'user', debug: true, enableRevisionChangeModel: true, enableCompression: true, enableMigration: true });
+  // PaperTrail.defineModels();
+
+
+  // define hooks
+
+  console.info(app.model);
+  const sequelize = app.model;
+  sequelize.addHook('afterCreate', (sequelize, options) => {
+    console.info('afterCreated called');
+    console.info(sequelize);
+    console.info(options);
+    // Do stuff
+  });
+  sequelize.addHook('afterUpdate', (sequelize, options) => {
+    console.info('afterUpdate called');
+    console.info(sequelize);
+    console.info(options);
+    // Do stuff
+  });
+  sequelize.addHook('afterDestroy', (sequelize, options) => {
+    console.info('afterUpdate called');
+    console.info(sequelize);
+    console.info(options);
+    // Do stuff
+  });
   return User;
 };
