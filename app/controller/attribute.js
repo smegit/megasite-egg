@@ -62,6 +62,14 @@ class AttributeController extends Controller {
     const res = await service.attribute.getAll();
     ctx.body = res;
   }
+
+  async checkName() {
+    const { ctx, service } = this;
+    const name = ctx.params.name;
+    const res = await service.attribute.checkName(name);
+    ctx.body = res;
+    ctx.status = 200;
+  }
 }
 
 module.exports = AttributeController;

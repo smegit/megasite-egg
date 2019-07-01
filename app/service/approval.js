@@ -5,7 +5,7 @@ const path = require('path');
 const pump = require('mz-modules/pump');
 const Service = require('egg').Service;
 
-const uploadPath = 'app/public/upload/approvals';
+const uploadPath = '/upload/approvals';
 class Approval extends Service {
   async list({ offset = 0, limit = 10 }) {
     return this.ctx.model.Approval.findAndCountAll({
@@ -29,6 +29,12 @@ class Approval extends Service {
           attributes: ['id', 'type', ['attachment', 'name'], 'url', 'uid'],
           through: { attributes: [] },
         },
+        {
+          model: ctx.model.Product,
+          as: 'product',
+          attributes: ['id', 'model_number'],
+          through: { attributes: [] },
+        },
       ],
     });
     if (!approval) {
@@ -42,11 +48,12 @@ class Approval extends Service {
 
   async create(payload, files) {
     const { ctx } = this;
+    const prodList = JSON.parse(payload.prodList) || [];
     const approval = await ctx.model.Approval.create(payload);
     // uploading files
     try {
       for (const file of files) {
-        const targetPath = path.join(this.config.baseDir, uploadPath, file.filename);
+        const targetPath = path.join(this.config.HOME, uploadPath, file.filename);
         const source = fs.createReadStream(file.filepath);
         const target = fs.createWriteStream(targetPath);
         await pump(source, target);
@@ -58,7 +65,7 @@ class Approval extends Service {
           attachment: file.filename,
           file_type: 'Approval Document',
           descriptioin: 'Approval Description',
-          url: targetPath,
+          url: `${uploadPath}/${file.filename}`,
           uid: Math.random().toString(36).substring(7),
         };
         const attachment = await ctx.model.Attachment.create(obj);
@@ -70,12 +77,18 @@ class Approval extends Service {
       ctx.cleanupRequestFiles();
     }
 
-
+    // create association of approval-products
+    const products = await ctx.model.Product.findAll({
+      where: { id: prodList }
+    });
+    console.info(products);
+    approval.setProduct(products);
     return approval;
   }
 
   async update(id, payload, files) {
     const { ctx } = this;
+    const prodList = JSON.parse(payload.prodList) || [];
     const approval = await ctx.model.Approval.findByPk(id);
     console.info(files);
     if (!approval) {
@@ -83,7 +96,7 @@ class Approval extends Service {
     }
     try {
       for (const file of files) {
-        const targetPath = path.join(this.config.baseDir, uploadPath, file.filename);
+        const targetPath = path.join(this.config.HOME, uploadPath, file.filename);
         const source = fs.createReadStream(file.filepath);
         const target = fs.createWriteStream(targetPath);
         await pump(source, target);
@@ -94,7 +107,7 @@ class Approval extends Service {
           attachment: file.filename,
           file_type: 'Approval Document',
           descriptioin: 'Approval Description',
-          url: targetPath,
+          url: `${uploadPath}/${file.filename}`,
           uid: Math.random().toString(36).substring(7),
         };
         const attachment = await ctx.model.Attachment.create(obj);
@@ -105,6 +118,14 @@ class Approval extends Service {
       // remove tmp files
       ctx.cleanupRequestFiles();
     }
+
+    console.info(prodList);
+    // create association of approval-products
+    const products = await ctx.model.Product.findAll({
+      where: { id: prodList }
+    });
+    console.info(products);
+    approval.setProduct(products);
     return approval.update(payload);
   }
 

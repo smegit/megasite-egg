@@ -55,6 +55,24 @@ class Attribute extends Service {
     return ctx.model.Attribute.findAll();
   }
 
+  async checkName(name) {
+    const { ctx } = this;
+    const { Op } = ctx.app.Sequelize;
+    const attribute = await ctx.model.Attribute.findOne({
+      where: {
+        name: {
+          [Op.iLike]: `${name}`
+        }
+      },
+    });
+    if (attribute) {
+      ctx.throw(422, `${name} already exist.`);
+    }
+    return {
+      success: true,
+    }
+  }
+
 }
 
 module.exports = Attribute;

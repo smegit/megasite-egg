@@ -18,7 +18,9 @@ module.exports = app => {
     updated_at: DATE,
   });
   // console.info(app.model.models);
-  approval.belongsToMany(product, { through: 'product_approvals', as: 'approval' });
+  approval.belongsToMany(product, { through: 'product_approvals', as: 'product' });
+  //product.belongsToMany(approval, { through: 'product_approvals', as: 'product' });
+
   // approval.belongsToMany(attachment, { through: 'approval_attachments', as: 'docs' });
   // console.info(app.model);
   approval.belongsToMany(attachment, { onDelete: 'cascade', through: 'approval_attachments', as: 'attachment' });
@@ -48,25 +50,25 @@ module.exports = app => {
 
   // define hooks
 
-  console.info(app.model);
-  const sequelize = app.model;
-  sequelize.addHook('afterCreate', (sequelize, options) => {
-    console.info('afterCreated called');
-    console.info(sequelize);
-    console.info(options);
-    // Do stuff
-  });
-  sequelize.addHook('afterUpdate', (sequelize, options) => {
-    console.info('afterUpdate called');
-    console.info(sequelize);
-    console.info(options);
-    // Do stuff
-  });
-  sequelize.addHook('afterDestroy', (sequelize, options) => {
-    console.info('afterUpdate called');
-    console.info(sequelize);
-    console.info(options);
-    // Do stuff
-  });
+  // console.info(app.model);
+  // const sequelize = app.model;
+  // sequelize.addHook('afterCreate', (sequelize, options) => {
+  //   console.info('afterCreated called');
+  //   console.info(sequelize);
+  //   console.info(options);
+  //   // Do stuff
+  // });
+  // sequelize.addHook('afterUpdate', (sequelize, options) => {
+  //   console.info('afterUpdate called');
+  //   console.info(sequelize);
+  //   console.info(options);
+  //   // Do stuff
+  // });
+  // sequelize.addHook('afterDestroy', (sequelize, options) => {
+  //   console.info('afterUpdate called');
+  //   console.info(sequelize);
+  //   console.info(options);
+  //   // Do stuff
+  // });
   return User;
 };

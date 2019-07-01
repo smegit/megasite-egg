@@ -257,6 +257,40 @@ class Product extends Service {
     }
   }
 
+  async getAll() {
+    const { ctx } = this;
+    return ctx.model.Product.findAll({
+      attributes: ['id', 'model_number']
+    });
+  }
+
+  // async moveCoverImageToAttachment() {
+  //   console.info('in MoveCoverImageToAttachment');
+  //   const { ctx } = this;
+  //   const { Op } = ctx.app.Sequelize;
+  //   const prodWithCoverImage = await ctx.model.Product.findAll({
+  //     where: {
+  //       cover_image: { [Op.ne]: null }
+  //     }
+  //   });
+  //   try {
+  //     for (let i = 0; i < prodWithCoverImage.length; i++) {
+  //       const obj = {
+  //         type: 'CoverImage',
+  //         attachment: prodWithCoverImage[i].dataValues.cover_image,
+  //       }
+  //       const attachment = await ctx.model.Attachment.create(obj);
+  //       const product = await ctx.model.Product.findOne({
+  //         where: { id: prodWithCoverImage[i].dataValues.id }
+  //       })
+  //       product.addAttachment(attachment);
+  //     }
+  //     console.info(prodWithCoverImage.length);
+  //   } finally {
+
+  //   }
+  //   console.info(prodWithCoverImage[1]);
+  // }
 }
 
 module.exports = Product;

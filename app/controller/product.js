@@ -89,6 +89,19 @@ class ProductController extends Controller {
     ctx.status = 200;
   }
 
+  async getAll() {
+    const { ctx, service } = this;
+    const res = await service.product.getAll();
+    ctx.body = res;
+    ctx.status = 200;
+  }
+
+  // async moveCoverImageToAttachment() {
+  //   const { ctx, service } = this;
+  //   const res = await service.product.moveCoverImageToAttachment();
+  //   ctx.body = res;
+  //   ctx.status = 200;
+  // }
 }
 
 module.exports = ProductController;

@@ -21,6 +21,9 @@ module.exports = app => {
 
   // routes for products
   router.get('/api/product', app.jwt, controller.product.index);
+  // router.get('/api/product/move/move', app.jwt, controller.product.moveCoverImageToAttachment);
+
+  router.get('/api/product/all', app.jwt, controller.product.getAll);
   router.get('/api/product/:id', app.jwt, controller.product.show);
   router.post('/api/product', app.jwt, controller.product.create);
   router.put('/api/product/:id', app.jwt, controller.product.update);
@@ -67,6 +70,8 @@ module.exports = app => {
   router.post('/api/attribute', app.jwt, controller.attribute.create);
   router.put('/api/attribute/:id', app.jwt, controller.attribute.update);
   router.delete('/api/attribute/:id', app.jwt, controller.attribute.destroy);
+  router.get('/api/attribute/check/:name', app.jwt, controller.attribute.checkName);
+
 
   // routes for feature
   router.get('/api/feature', app.jwt, controller.feature.index);

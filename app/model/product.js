@@ -12,6 +12,7 @@ module.exports = app => {
     description: { type: STRING },
     aesthetic: { type: STRING },
     data: { type: JSONB },
+    cover_image: { type: STRING },
     created_at: DATE,
     updated_at: DATE,
   });

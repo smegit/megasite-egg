@@ -63,6 +63,7 @@ module.exports = appInfo => {
 
   config.multipart = {
     fileSize: '10mb',
+    fields: 20,
     mode: 'file',
     whitelist: [
       '.pdf',
