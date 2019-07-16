@@ -20,6 +20,7 @@ class AttributeController extends Controller {
     const query = {
       limit: ctx.helper.parseInt(ctx.query.limit),
       offset: ctx.helper.parseInt(ctx.query.offset),
+      search: ctx.query.query || {}
     };
     const res = await ctx.service.attribute.list(query);
     ctx.body = res;

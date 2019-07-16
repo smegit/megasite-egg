@@ -3,8 +3,14 @@
 const Service = require('egg').Service;
 
 class Attribute extends Service {
-  async list({ offset = 0, limit = 10 }) {
+  async list({ offset = 0, limit = 10, search = {} }) {
+    const { ctx } = this;
+    const { Op } = ctx.app.Sequelize;
+    search = JSON.parse(search);
     return this.ctx.model.Attribute.findAndCountAll({
+      where: {
+        ...search.name && { name: { [Op.iLike]: `%${search.name}%` } }
+      },
       order: [
         // Will escape title and validate DESC against a list of valid direction parameters
         ['created_at', 'DESC']],
