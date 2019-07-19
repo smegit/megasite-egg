@@ -4,7 +4,7 @@ const path = require('path');
 const pump = require('mz-modules/pump');
 const Service = require('egg').Service;
 
-const uploadPath = 'app/public/upload/function';
+const uploadPath = '/upload/function';
 
 class Fun extends Service {
   async list({ offset = 0, limit = 10, search = {} }) {
@@ -46,7 +46,7 @@ class Fun extends Service {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const targetPath = path.join(this.config.baseDir, uploadPath, file.filename);
+        const targetPath = path.join(this.config.HOME, uploadPath, file.filename);
         const source = fs.createReadStream(file.filepath);
         const target = fs.createWriteStream(targetPath);
         await pump(source, target);
@@ -73,7 +73,7 @@ class Fun extends Service {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const targetPath = path.join(this.config.baseDir, uploadPath, file.filename);
+        const targetPath = path.join(this.config.HOME, uploadPath, file.filename);
         const source = fs.createReadStream(file.filepath);
         const target = fs.createWriteStream(targetPath);
         await pump(source, target);
