@@ -30,27 +30,33 @@ class Feature extends Service {
 
   async create(payload) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     console.info(payload);
-    return ctx.model.Feature.create(payload);
+    return ctx.model.Feature.create(payload, { userId: userId });
   }
 
   async update(id, payload) {
     const { ctx } = this;
+    const token = ctx.helper.getAccessToken(ctx);
+    const userId = await ctx.helper.getUserByToken(ctx);
+    console.info(token);
+    console.info(userId);
     const feature = await ctx.model.Feature.findByPk(id);
     if (!feature) {
       ctx.throw(404, 'feature not found');
     }
 
-    return feature.update(payload);
+    return feature.update(payload, { userId: userId });
   }
 
   async destroy(id) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const feature = await ctx.model.Feature.findByPk(id);
     if (!feature) {
       ctx.throw(404, 'feature not found');
     }
-    return feature.destroy();
+    return feature.destroy({ userId: userId });
   }
 
   async checkName(name) {

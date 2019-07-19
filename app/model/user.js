@@ -4,7 +4,8 @@ module.exports = app => {
   const { STRING, INTEGER, DATE } = app.Sequelize;
 
 
-  const { product, approval, attachment, category, attribute, feature } = app.model.models;
+  const { product, approval, attachment, category, attribute, feature, product_attachment,
+    product_feature, category_attachment, fun } = app.model.models;
 
   const User = app.model.define('user', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -42,10 +43,19 @@ module.exports = app => {
   //   birthday: Sequelize.DATE
   // });
   //PaperTrail.defineModels();
-  //console.info(app.model);
+  console.info(app.model);
 
-  // const PaperTrail = require('sequelize-paper-trail').init(app.model, { userModel: 'user', debug: true, enableRevisionChangeModel: true, enableCompression: true, enableMigration: true });
-  // PaperTrail.defineModels();
+  const PaperTrail = require('sequelize-paper-trail').init(app.model, { userModel: 'user', debug: true, enableRevisionChangeModel: true, enableCompression: true, enableMigration: true });
+  PaperTrail.defineModels();
+  feature.hasPaperTrail();
+  product.hasPaperTrail();
+  attachment.hasPaperTrail();
+  product_attachment.hasPaperTrail();
+  approval.hasPaperTrail();
+  product_feature.hasPaperTrail();
+  attribute.hasPaperTrail();
+  category_attachment.hasPaperTrail();
+  fun.hasPaperTrail();
 
 
   // define hooks

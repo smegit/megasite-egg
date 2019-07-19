@@ -31,28 +31,31 @@ class Attribute extends Service {
 
   async create(payload) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     // payload.encrypted_password = await ctx.genHash(payload.password);
     console.info(payload);
-    return ctx.model.Attribute.create(payload);
+    return ctx.model.Attribute.create(payload, { userId: userId });
   }
 
   async update(id, payload) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const attribute = await ctx.model.Attribute.findByPk(id);
     if (!attribute) {
       ctx.throw(404, 'attribute not found');
     }
 
-    return attribute.update(payload);
+    return attribute.update(payload, { userId: userId });
   }
 
   async destroy(id) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const attribute = await ctx.model.Attribute.findByPk(id);
     if (!attribute) {
       ctx.throw(404, 'attribute not found');
     }
-    return attribute.destroy();
+    return attribute.destroy({ userId: userId });
   }
 
   async getAll() {

@@ -48,8 +48,9 @@ class Approval extends Service {
 
   async create(payload, files) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const prodList = JSON.parse(payload.prodList) || [];
-    const approval = await ctx.model.Approval.create(payload);
+    const approval = await ctx.model.Approval.create(payload, { userId: userId });
     // uploading files
     try {
       for (const file of files) {
@@ -68,7 +69,7 @@ class Approval extends Service {
           url: `${uploadPath}/${file.filename}`,
           uid: Math.random().toString(36).substring(7),
         };
-        const attachment = await ctx.model.Attachment.create(obj);
+        const attachment = await ctx.model.Attachment.create(obj, { userId: userId });
         console.info(attachment);
         approval.addAttachment(attachment);
       }

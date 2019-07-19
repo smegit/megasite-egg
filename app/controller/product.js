@@ -35,7 +35,7 @@ class ProductController extends Controller {
     const payload = ctx.request.body || {};
     payload.data = JSON.parse(payload.data);
     const files = ctx.request.files || [];
-    console.info(payload);
+    //console.info(payload);
     const res = await service.product.create(payload, files);
     ctx.body = res;
     ctx.status = 201;

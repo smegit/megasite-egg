@@ -84,13 +84,15 @@ class Product extends Service {
 
   async create(payload, files) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const fileAttributes = JSON.parse(payload.fileAttributes) || [];
     const approvalList = JSON.parse(payload.approval_list) || [];
-    const featureList = JSON.parse(payload.feature) || [];
+    // console.info((payload.feature).length);
+    const featureList = (payload.feature).length > 0 ? JSON.parse(payload.feature) : [];
     // delete payload.fileAttributes;
     // delete payload.attribute_list;
-    console.info(payload);
-    const product = await ctx.model.Product.create(payload);
+
+    const product = await ctx.model.Product.create(payload, { userId: userId });
     // uploading files
     try {
       for (let i = 0; i < files.length; i++) {
@@ -110,9 +112,15 @@ class Product extends Service {
           url: `${uploadPath}/${file.filename}`,
           uid: Math.random().toString(36).substring(7),
         };
-        const attachment = await ctx.model.Attachment.create(obj);
+        const attachment = await ctx.model.Attachment.create(obj, { userId: userId });
         console.info(attachment);
-        product.addAttachment(attachment);
+        // product.addAttachment(attachment, { userId, userId });
+        // const ob 
+        await ctx.model.ProductAttachment.create({
+          product_id: product.id,
+          attachment_id: attachment.id,
+        }, { userId: userId });
+
       }
     } finally {
       // remove tmp files
@@ -141,6 +149,7 @@ class Product extends Service {
 
   async update(id, payload, files) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const approvalList = JSON.parse(payload.approval_list) || [];
     const fileAttributes = JSON.parse(payload.fileAttributes) || [];
     const featureList = JSON.parse(payload.feature) || [];
@@ -175,9 +184,13 @@ class Product extends Service {
           url: `${uploadPath}/${file.filename}`,
           uid: Math.random().toString(36).substring(7),
         };
-        const attachment = await ctx.model.Attachment.create(obj);
+        const attachment = await ctx.model.Attachment.create(obj, { userId, userId });
         console.info(attachment);
-        product.addAttachment(attachment);
+        //product.addAttachment(attachment, { userId: userId });
+        await ctx.model.ProductAttachment.create({
+          product_id: product.id,
+          attachment_id: attachment.id,
+        }, { userId: userId });
       }
     } finally {
       // remove tmp files
@@ -199,10 +212,12 @@ class Product extends Service {
       where: { id: existingFeaturesId }
     });
     const newFeatures = await ctx.model.Feature.bulkCreate(newFeaturesObj, { returning: true });
-    product.setFeature(features);
-    product.addFeature(newFeatures);
-
-    return product.update(payload);
+    product.setFeature(features, { userId: userId });
+    product.addFeature(newFeatures, { userId: userId });
+    //await ctx.model.ProductFeature.create()
+    payload.type = parseInt(payload.type);
+    console.info(payload);
+    return product.update(payload, { userId: userId });
   }
 
   async destroy(id) {
@@ -227,6 +242,8 @@ class Product extends Service {
 
   async deleteItsAttachment(id, attachment_id) {
     const { ctx } = this;
+    console.info(ctx.model);
+    const userId = await ctx.helper.getUserByToken(ctx);
     const product = await ctx.model.Product.findByPk(id);
     const attachment = await ctx.model.Attachment.findByPk(attachment_id);
     if (!product) {
@@ -235,8 +252,13 @@ class Product extends Service {
     if (!attachment) {
       ctx.throw(404, 'attachment not found');
     }
-    product.removeAttachment(attachment);
-    return attachment.destroy();
+    //product.removeAttachment(attachment);
+    const productAttachment = await ctx.model.ProductAttachment.findOne({
+      where: { product_id: id, attachment_id: attachment_id }
+    });
+    productAttachment.destroy({ userId: userId });
+    // console.info(productAttachment);
+    return attachment.destroy({ userId: userId });
   }
 
   async checkModel(model_number) {

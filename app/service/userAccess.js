@@ -19,8 +19,9 @@ class UserAccessService extends Service {
       token: await ctx.app.jwt.sign({
         data: {
           _id: user.email,
+          userId: user.id
         },
-        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7),
+        exp: Math.floor(Date.now() / 1000) + (60 * 60),
       }, ctx.app.config.jwt.secret),
     };
 

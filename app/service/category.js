@@ -51,12 +51,13 @@ class Category extends Service {
   async create(payload, files) {
     console.info('create service called');
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const fileAttributes = JSON.parse(payload.fileAttributes);
     const attributeList = JSON.parse(payload.attribute_list);
     delete payload.fileAttributes;
     delete payload.attribute_list;
     console.info(payload);
-    const category = await ctx.model.Category.create(payload);
+    const category = await ctx.model.Category.create(payload, { userId: userId });
 
     console.info(fileAttributes);
     console.info(attributeList);
@@ -78,9 +79,13 @@ class Category extends Service {
           url: targetPath,
           uid: Math.random().toString(36).substring(7),
         };
-        const attachment = await ctx.model.Attachment.create(obj);
+        const attachment = await ctx.model.Attachment.create(obj, { userId: userId });
         console.info(attachment);
-        category.addAttachment(attachment);
+        // category.addAttachment(attachment);
+        await ctx.model.CategoryAttachment.create({
+          category_id: category.id,
+          attachment_id: attachment.id
+        }, { userId: userId });
       }
     } finally {
       // remove tmp files
@@ -97,6 +102,7 @@ class Category extends Service {
 
   async update(id, payload, files) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const category = await ctx.model.Category.findByPk(id);
     const fileAttributes = JSON.parse(payload.fileAttributes);
     const attributeList = JSON.parse(payload.attribute_list);
@@ -124,9 +130,13 @@ class Category extends Service {
           url: targetPath,
           uid: Math.random().toString(36).substring(7),
         };
-        const attachment = await ctx.model.Attachment.create(obj);
+        const attachment = await ctx.model.Attachment.create(obj, { userId: userId });
         console.info(attachment);
-        category.addAttachment(attachment);
+        //category.addAttachment(attachment);
+        await ctx.model.CategoryAttachment.create({
+          category_id: category.id,
+          attachment_id: attachment.id
+        }, { userId: userId });
       }
     } finally {
       // remove tmp files
@@ -139,11 +149,12 @@ class Category extends Service {
     });
     category.setAttribute(attributes);
 
-    return category.update(payload);
+    return category.update(payload, { userId: userId });
   }
 
   async destroy(id) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const category = await ctx.model.Category.findByPk(id);
     if (!category) {
       ctx.throw(404, 'category not found');
@@ -152,13 +163,14 @@ class Category extends Service {
     const att = await category.getAttachment();
     category.removeAttachment(att); // remove the link table queries
     for (const attachment of att) { // remove the attachment table queries
-      attachment.destroy();
+      attachment.destroy({ userId: userId });
     }
-    return category.destroy();
+    return category.destroy({ userId: userId });
   }
 
   async deleteItsAttachment(id, attachment_id) {
     const { ctx } = this;
+    const userId = await ctx.helper.getUserByToken(ctx);
     const category = await ctx.model.Category.findByPk(id);
     const attachment = await ctx.model.Attachment.findByPk(attachment_id);
     if (!category) {
@@ -168,7 +180,8 @@ class Category extends Service {
       ctx.throw(404, 'attachment not found');
     }
     category.removeAttachment(attachment);
-    return attachment.destroy();
+
+    return attachment.destroy({ userId: userId });
   }
 
   async getAll() {

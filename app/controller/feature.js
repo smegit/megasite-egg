@@ -15,7 +15,7 @@ class FeatureController extends Controller {
     const sequelize = ctx.app.Sequelize;
     console.info('--------------------sequelize')
     //console.info(ctx.app.model);
-    // const PaperTrail = require('sequelize-paper-trail').init(ctx.app.model, { userModel: '', debug: true, enableRevisionChangeModel: true, enableCompression: true, enableMigration: true });
+    // const PaperTrail = require('sequelize-paper-trail').init(ctx.app.model, { userModel: 'user', debug: true, enableRevisionChangeModel: true, enableCompression: true, enableMigration: true });
     // PaperTrail.defineModels();
     // ctx.model.Feature.Revisions = ctx.model.Feature.hasPaperTrail();
 

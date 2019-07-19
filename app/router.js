@@ -81,5 +81,14 @@ module.exports = app => {
   router.put('/api/feature/:id', app.jwt, controller.feature.update);
   router.delete('/api/feature/:id', app.jwt, controller.feature.destroy);
   router.get('/api/feature/check/:feature_name', app.jwt, controller.feature.checkName);
-  router.get('/api/feature/type/:f_type', app.jwt, controller.feature.getFeaturesByType)
+  router.get('/api/feature/type/:f_type', app.jwt, controller.feature.getFeaturesByType);
+
+  // routes for function
+  router.get('/api/fun', app.jwt, controller.fun.index);
+  // router.get('/api/fun/all', app.jwt, controller.fun.getAll);
+  router.get('/api/fun/:id', app.jwt, controller.fun.show);
+  router.post('/api/fun', app.jwt, controller.fun.create);
+  router.put('/api/fun/:id', app.jwt, controller.fun.update);
+  router.delete('/api/fun/:id', app.jwt, controller.fun.destroy);
+  router.get('/api/fun/check/:fun_code', app.jwt, controller.fun.checkFunCode);
 };
