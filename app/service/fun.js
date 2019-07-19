@@ -51,7 +51,7 @@ class Fun extends Service {
         const target = fs.createWriteStream(targetPath);
         await pump(source, target);
         ctx.logger.warn('save %s to %s', file.filepath, targetPath);
-        payload.url = targetPath;
+        payload.url = path.join(uploadPath, file.filename);;
       }
     } finally {
       // remove tmp files
@@ -78,7 +78,7 @@ class Fun extends Service {
         const target = fs.createWriteStream(targetPath);
         await pump(source, target);
         ctx.logger.warn('save %s to %s', file.filepath, targetPath);
-        payload.url = targetPath;
+        payload.url = path.join(uploadPath, file.filename);;
       }
     } finally {
       // remove tmp files

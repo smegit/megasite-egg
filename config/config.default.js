@@ -68,7 +68,8 @@ module.exports = appInfo => {
     whitelist: [
       '.pdf',
       '.jpg',
-      '.jpeg'
+      '.jpeg',
+      '.png'
     ],
     tmpdir: path.join(os.tmpdir(), 'upload-tmp', appInfo.name),
     cleanSchedule: {
