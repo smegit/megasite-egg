@@ -186,7 +186,9 @@ class Category extends Service {
 
   async getAll() {
     const { ctx } = this;
-    return ctx.model.Category.findAll();
+    return ctx.model.Category.findAll({
+      order: [['name', 'ASC']],
+    });
   }
 
   async getItsAttribute(id) {
