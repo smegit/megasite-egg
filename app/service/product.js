@@ -73,6 +73,7 @@ class Product extends Service {
           through: { attributes: [] },
         },
       ],
+      order: [[{ model: ctx.model.Feature, as: 'feature' }, 'name']]
     });;
     const approval = await product.getApproval();
     //console.info(approval);

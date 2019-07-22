@@ -197,7 +197,9 @@ class Category extends Service {
     if (!category) {
       ctx.throw(404, 'category not found');
     }
-    return category.getAttribute();
+    return category.getAttribute({
+      order: [['name', 'ASC']],
+    });
   }
 
   async checkName(name) {

@@ -21,7 +21,7 @@ class UserAccessService extends Service {
           _id: user.email,
           userId: user.id
         },
-        exp: Math.floor(Date.now() / 1000) + (60 * 60),
+        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 2),
       }, ctx.app.config.jwt.secret),
     };
 

@@ -82,7 +82,8 @@ class Feature extends Service {
       where: {
         //feature_type: featureType
       },
-      attributes: ['id', 'name']
+      attributes: ['id', 'name'],
+      order: [['name', 'ASC']]
     });
     if (!features) {
       ctx.throw(404, 'features not found');

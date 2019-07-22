@@ -13,7 +13,7 @@ class Fun extends Service {
     search = search.length > 0 ? JSON.parse(search) : {};
     return ctx.model.Function.findAndCountAll({
       where: {
-        ...search.name && { name: { [Op.iLike]: `%${search.name}%` } },
+        ...search.name && { function_code: { [Op.iLike]: `%${search.name}%` } },
       },
       order: [['created_at', 'DESC']],
       offset,

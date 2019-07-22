@@ -18,7 +18,9 @@ class ApprovalController extends Controller {
     const query = {
       limit: ctx.helper.parseInt(ctx.query.limit),
       offset: ctx.helper.parseInt(ctx.query.offset),
+      search: ctx.query.query || {}
     };
+    console.info(query);
     const res = await service.approval.list(query);
     ctx.body = res;
   }

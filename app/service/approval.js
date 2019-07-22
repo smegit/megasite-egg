@@ -7,8 +7,14 @@ const Service = require('egg').Service;
 
 const uploadPath = '/upload/approvals';
 class Approval extends Service {
-  async list({ offset = 0, limit = 10 }) {
-    return this.ctx.model.Approval.findAndCountAll({
+  async list({ offset = 0, limit = 10, search = {} }) {
+    search = JSON.parse(search);
+    const { ctx } = this;
+    const { Op } = ctx.app.Sequelize;
+    return ctx.model.Approval.findAndCountAll({
+      where: {
+        ...search.approval_no && { approval_no: { [Op.iLike]: `%${search.approval_no}%` } }
+      },
       order: [
         // Will escape title and validate DESC against a list of valid direction parameters
         ['created_at', 'DESC']],
