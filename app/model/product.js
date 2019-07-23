@@ -13,6 +13,8 @@ module.exports = app => {
     aesthetic: { type: STRING },
     data: { type: JSONB },
     cover_image: { type: STRING },
+    ean: { type: STRING },
+    status: { type: STRING },
     created_at: DATE,
     updated_at: DATE,
   });

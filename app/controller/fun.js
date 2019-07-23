@@ -64,6 +64,13 @@ class FunController extends Controller {
     ctx.body = res;
     ctx.status = 200;
   }
+
+  async getAll() {
+    const { ctx, service } = this;
+    const res = await service.fun.getAll();
+    ctx.body = res;
+    ctx.status = 200;
+  }
 }
 
 module.exports = FunController;

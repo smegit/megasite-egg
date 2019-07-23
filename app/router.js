@@ -66,6 +66,7 @@ module.exports = app => {
   // routes for attribute
   router.get('/api/attribute', app.jwt, controller.attribute.index);
   router.get('/api/attribute/all', app.jwt, controller.attribute.getAll);
+  router.get('/api/attribute/getByName/:name', app.jwt, controller.attribute.getByName);
   router.get('/api/attribute/:id', app.jwt, controller.attribute.show);
   router.post('/api/attribute', app.jwt, controller.attribute.create);
   router.put('/api/attribute/:id', app.jwt, controller.attribute.update);
@@ -85,7 +86,7 @@ module.exports = app => {
 
   // routes for function
   router.get('/api/fun', app.jwt, controller.fun.index);
-  // router.get('/api/fun/all', app.jwt, controller.fun.getAll);
+  router.get('/api/fun/all', app.jwt, controller.fun.getAll);
   router.get('/api/fun/:id', app.jwt, controller.fun.show);
   router.post('/api/fun', app.jwt, controller.fun.create);
   router.put('/api/fun/:id', app.jwt, controller.fun.update);

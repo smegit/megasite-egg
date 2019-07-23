@@ -82,6 +82,19 @@ class Attribute extends Service {
     }
   }
 
+  async getByName(name) {
+    const { ctx } = this;
+    const attribute = await ctx.model.Attribute.findOne({
+      where: {
+        name: name
+      }
+    });
+    if (!attribute) {
+      ctx.throw(404, `attribute ${name} not found`);
+    }
+    return attribute;
+  }
+
 }
 
 module.exports = Attribute;

@@ -102,7 +102,9 @@ class Fun extends Service {
 
   async getAll() {
     const { ctx } = this;
-    return ctx.model.Function.findAll();
+    return ctx.model.Function.findAll({
+      attributes: ['id', 'function_code', 'description', 'url']
+    });
   }
 
 
