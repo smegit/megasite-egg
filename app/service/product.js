@@ -47,6 +47,7 @@ class Product extends Service {
 
   async find(id) {
     const { ctx } = this;
+    console.info(id);
     const product = await ctx.model.Product.findOne({
       where: { id },
       include: [
@@ -283,7 +284,7 @@ class Product extends Service {
   async getAll() {
     const { ctx } = this;
     return ctx.model.Product.findAll({
-      attributes: ['id', 'model_number']
+      attributes: ['id', 'model_number', 'type']
     });
   }
 

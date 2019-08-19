@@ -48,6 +48,7 @@ module.exports = app => {
   // operations to attachments being attached to an approval
   router.get('/api/approval/:id/attachment', controller.approval.findItsAttachment);
   router.delete('/api/approval/:id/attachment/:a_id', controller.approval.deleteItsAttachment);
+  router.get('/api/approval/check/:approval_no', app.jwt, controller.approval.checkDuplicates);
 
   // routes for upload
   router.post('/api/upload/approval', app.jwt, controller.upload.approval);

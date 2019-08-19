@@ -56,11 +56,14 @@ class Approval extends Service {
     const { ctx } = this;
     const userId = await ctx.helper.getUserByToken(ctx);
     const prodList = JSON.parse(payload.prodList) || [];
+    payload.product_types = JSON.parse(payload.product_types) || [];
     const approval = await ctx.model.Approval.create(payload, { userId: userId });
     // uploading files
     try {
       for (const file of files) {
-        const targetPath = path.join(this.config.HOME, uploadPath, file.filename);
+        const extension = file.filename.split('.').pop();
+        const newName = (payload.approval_no).toLowerCase() + '_' + Math.random().toString(36).substring(9) + '.' + extension.toLowerCase();
+        const targetPath = path.join(this.config.HOME, uploadPath, newName);
         const source = fs.createReadStream(file.filepath);
         const target = fs.createWriteStream(targetPath);
         await pump(source, target);
@@ -69,14 +72,14 @@ class Approval extends Service {
         // add attachment
         const obj = {
           type: 'ApprovalAttachment',
-          attachment: file.filename,
+          attachment: newName,
           file_type: 'Approval Document',
           descriptioin: 'Approval Description',
-          url: `${uploadPath}/${file.filename}`,
+          url: `${uploadPath}/${newName}`,
           uid: Math.random().toString(36).substring(7),
         };
         const attachment = await ctx.model.Attachment.create(obj, { userId: userId });
-        console.info(attachment);
+        // console.info(attachment);
         approval.addAttachment(attachment);
       }
     } finally {
@@ -96,6 +99,9 @@ class Approval extends Service {
   async update(id, payload, files) {
     const { ctx } = this;
     const prodList = JSON.parse(payload.prodList) || [];
+    console.info(payload);
+
+    payload.product_types = JSON.parse(payload.product_types) || [];
     const approval = await ctx.model.Approval.findByPk(id);
     console.info(files);
     if (!approval) {
@@ -103,7 +109,10 @@ class Approval extends Service {
     }
     try {
       for (const file of files) {
-        const targetPath = path.join(this.config.HOME, uploadPath, file.filename);
+        const extension = file.filename.split('.').pop();
+        const newName = (payload.approval_no).toLowerCase() + '_' + Math.random().toString(36).substring(9) + '.' + extension.toLowerCase();
+        console.info(newName);
+        const targetPath = path.join(this.config.HOME, uploadPath, newName);
         const source = fs.createReadStream(file.filepath);
         const target = fs.createWriteStream(targetPath);
         await pump(source, target);
@@ -111,14 +120,14 @@ class Approval extends Service {
         // add attachment
         const obj = {
           type: 'ApprovalAttachment',
-          attachment: file.filename,
+          attachment: newName,
           file_type: 'Approval Document',
           descriptioin: 'Approval Description',
-          url: `${uploadPath}/${file.filename}`,
+          url: `${uploadPath}/${newName}`,
           uid: Math.random().toString(36).substring(7),
         };
         const attachment = await ctx.model.Attachment.create(obj);
-        console.info(attachment);
+        //console.info(attachment);
         approval.addAttachment(attachment);
       }
     } finally {
@@ -126,12 +135,12 @@ class Approval extends Service {
       ctx.cleanupRequestFiles();
     }
 
-    console.info(prodList);
+    //console.info(prodList);
     // create association of approval-products
     const products = await ctx.model.Product.findAll({
       where: { id: prodList }
     });
-    console.info(products);
+    //console.info(products);
     approval.setProduct(products);
     return approval.update(payload);
   }
@@ -156,8 +165,8 @@ class Approval extends Service {
     const { ctx } = this;
     const approval = await ctx.model.Approval.findByPk(id);
     const attachment = await ctx.model.Attachment.findByPk(attachment_id);
-    console.info(attachment);
-    console.info(approval);
+    // console.info(attachment);
+    // console.info(approval);
     if (!approval) {
       ctx.throw(404, 'approval not found');
     }
@@ -173,10 +182,27 @@ class Approval extends Service {
   async getAll() {
     const { ctx } = this;
     return ctx.model.Approval.findAll({
-      attributes: ['id', 'approval_type', 'approval_no']
+      attributes: ['id', 'approval_type', 'approval_no', 'product_types']
     });
   }
 
+  async checkDuplicates(approval_no) {
+    const { ctx } = this;
+    const { Op } = ctx.app.Sequelize;
+    const approval = await ctx.model.Approval.findOne({
+      where: {
+        approval_no: {
+          [Op.iLike]: `${approval_no}`
+        }
+      },
+    });
+    if (approval) {
+      ctx.throw(422, `${approval_no} already exist.`);
+    }
+    return {
+      success: true,
+    }
+  }
 }
 
 module.exports = Approval;

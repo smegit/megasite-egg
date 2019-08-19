@@ -110,6 +110,15 @@ class ApprovalController extends Controller {
     ctx.status = 200;
   }
 
+  async checkDuplicates() {
+    console.info('checkDuplicates called');
+    const { ctx, service } = this;
+    const approvalNo = ctx.params.approval_no;
+    const res = await service.approval.checkDuplicates(approvalNo);
+    ctx.body = res;
+    ctx.status = 200;
+  }
+
 }
 
 module.exports = ApprovalController;

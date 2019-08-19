@@ -35,13 +35,13 @@ class Category extends Service {
       }, {
         model: ctx.model.Attribute,
         as: 'attribute',
-        attributes: ['id', 'name', 'description'],
+        attributes: ['id', 'name', 'description', 'seq_group'],
         through: {
           attributes: [],
         },
       }],
     });
-    console.info(category);
+    //console.info(category);
     if (!category) {
       ctx.throw(404, 'category not found');
     }
@@ -54,6 +54,7 @@ class Category extends Service {
     const userId = await ctx.helper.getUserByToken(ctx);
     const fileAttributes = JSON.parse(payload.fileAttributes);
     const attributeList = JSON.parse(payload.attribute_list);
+    payload.sorter = payload.sorter.split(',');
     delete payload.fileAttributes;
     delete payload.attribute_list;
     console.info(payload);
@@ -106,11 +107,13 @@ class Category extends Service {
     const category = await ctx.model.Category.findByPk(id);
     const fileAttributes = JSON.parse(payload.fileAttributes);
     const attributeList = JSON.parse(payload.attribute_list);
+    //console.info(payload.sorter);
+    payload.sorter = payload.sorter.length > 0 ? payload.sorter.split(',') : null;
     if (!category) {
       ctx.throw(404, 'category not found');
     }
-    console.info(payload);
-    console.info(fileAttributes);
+    //console.info(payload);
+    //console.info(fileAttributes);
 
     // upload files
     try {
@@ -194,12 +197,26 @@ class Category extends Service {
   async getItsAttribute(id) {
     const { ctx } = this;
     const category = await ctx.model.Category.findByPk(id);
+    const sequelize = ctx.model;
+    let orderByString = '';
     if (!category) {
       ctx.throw(404, 'category not found');
     }
-    return category.getAttribute({
-      order: [['name', 'ASC']],
-    });
+    // return category.getAttribute({
+    //   //order: [['sequence', 'ASC']],
+    //   order: sequelize.customSorter
+    // });
+    console.info(category.sorter);
+    const sorterArray = category.sorter;
+    for (let i = 0; i < sorterArray.length; i++) {
+      orderByString = orderByString + ` seq_group != '{${sorterArray[i]}}', `;
+    }
+    console.info(orderByString);
+    return sequelize.query(' SELECT "attribute"."id", "attribute"."name", "attribute"."label", "attribute"."description", "attribute"."input_type", "attribute"."ui_type", "attribute"."options", "attribute"."seq_group", "attribute"."sequence", "attribute"."created_at", "attribute"."updated_at", "attribute"."revision", "category_attributes"."created_at" AS "category_attributes.created_at", "category_attributes"."updated_at" AS "category_attributes.updated_at", "category_attributes"."category_id" AS "category_attributes.category_id", "category_attributes"."attribute_id" AS "category_attributes.attribute_id" FROM "attributes" AS "attribute" INNER JOIN "category_attributes" AS "category_attributes" ON "attribute"."id" = "category_attributes"."attribute_id" AND "category_attributes"."category_id" = ' + id +
+      " order by " + orderByString + "sequence asc;", {
+        model: ctx.model.Attribute,
+        mapToModel: true
+      });
   }
 
   async checkName(name) {

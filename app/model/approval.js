@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { STRING, INTEGER, DATE, TEXT } = app.Sequelize;
+  const { STRING, INTEGER, DATE, TEXT, ARRAY } = app.Sequelize;
 
   const Approval = app.model.define('approval', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -23,6 +23,7 @@ module.exports = app => {
     status: STRING(30),
     notes: TEXT,
     approval_doc: STRING(30),
+    product_types: ARRAY(INTEGER),
     created_at: DATE,
     updated_at: DATE,
   });

@@ -50,7 +50,7 @@ module.exports = appInfo => {
     //host: '127.0.0.1',
     host: '10.1.1.123',
     port: 5432,
-    database: 'megasite_prod',
+    database: 'smeg_development',
     username: 'deploy',
     password: 'password',
   };

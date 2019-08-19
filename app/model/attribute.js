@@ -11,6 +11,8 @@ module.exports = app => {
     input_type: STRING(30),
     ui_type: STRING(30),
     options: ARRAY(STRING),
+    seq_group: ARRAY(STRING),
+    sequence: INTEGER,
     created_at: DATE,
     updated_at: DATE,
   });

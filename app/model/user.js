@@ -43,7 +43,7 @@ module.exports = app => {
   //   birthday: Sequelize.DATE
   // });
   //PaperTrail.defineModels();
-  console.info(app.model);
+  //console.info(app.model);
 
   const PaperTrail = require('sequelize-paper-trail').init(app.model, { userModel: 'user', debug: true, enableRevisionChangeModel: true, enableCompression: true, enableMigration: true });
   PaperTrail.defineModels();
