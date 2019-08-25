@@ -207,13 +207,13 @@ class Category extends Service {
     //   order: sequelize.customSorter
     // });
     console.info(category.sorter);
-    const sorterArray = category.sorter;
+    const sorterArray = category.sorter || [];
     for (let i = 0; i < sorterArray.length; i++) {
       orderByString = orderByString + ` seq_group != '{${sorterArray[i]}}', `;
     }
     console.info(orderByString);
     return sequelize.query(' SELECT "attribute"."id", "attribute"."name", "attribute"."label", "attribute"."description", "attribute"."input_type", "attribute"."ui_type", "attribute"."options", "attribute"."seq_group", "attribute"."sequence", "attribute"."created_at", "attribute"."updated_at", "attribute"."revision", "category_attributes"."created_at" AS "category_attributes.created_at", "category_attributes"."updated_at" AS "category_attributes.updated_at", "category_attributes"."category_id" AS "category_attributes.category_id", "category_attributes"."attribute_id" AS "category_attributes.attribute_id" FROM "attributes" AS "attribute" INNER JOIN "category_attributes" AS "category_attributes" ON "attribute"."id" = "category_attributes"."attribute_id" AND "category_attributes"."category_id" = ' + id +
-      " order by " + orderByString + "sequence asc;", {
+      " order by " + orderByString + "sequence asc, name asc;", {
         model: ctx.model.Attribute,
         mapToModel: true
       });

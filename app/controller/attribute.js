@@ -79,6 +79,13 @@ class AttributeController extends Controller {
     ctx.body = res;
     ctx.status = 200;
   }
+
+  async getSeqGroupList() {
+    const { ctx, service } = this;
+    const res = await service.attribute.getSeqGroupList();
+    ctx.body = res;
+    ctx.status = 200;
+  }
 }
 
 module.exports = AttributeController;

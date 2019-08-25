@@ -95,6 +95,12 @@ class Attribute extends Service {
     return attribute;
   }
 
+  async getSeqGroupList() {
+    const { ctx } = this;
+    const sequelize = ctx.model;
+    return sequelize.query('select distinct seq_group from attributes;')
+  }
+
 }
 
 module.exports = Attribute;

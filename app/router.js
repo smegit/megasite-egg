@@ -67,6 +67,7 @@ module.exports = app => {
   // routes for attribute
   router.get('/api/attribute', app.jwt, controller.attribute.index);
   router.get('/api/attribute/all', app.jwt, controller.attribute.getAll);
+  // router.get('/api/attribute/getSeqGroupList', app.jwt, controller.attribute.getSeqGroupList);
   router.get('/api/attribute/getByName/:name', app.jwt, controller.attribute.getByName);
   router.get('/api/attribute/:id', app.jwt, controller.attribute.show);
   router.post('/api/attribute', app.jwt, controller.attribute.create);
