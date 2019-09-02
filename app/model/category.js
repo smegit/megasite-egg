@@ -4,7 +4,7 @@ module.exports = app => {
   const { STRING, INTEGER, DATE, TEXT, ARRAY } = app.Sequelize;
   const Category = app.model.define('category', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-    name: STRING(30),
+    name: STRING,
     description: TEXT,
     sorter: ARRAY(STRING),
     // parent_id: INTEGER,

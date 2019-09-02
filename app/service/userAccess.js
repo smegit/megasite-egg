@@ -16,10 +16,18 @@ class UserAccessService extends Service {
       ctx.throw(401, 'wrong password');
     }
     return {
+      user: {
+        _id: user.email,
+        userId: user.id,
+        firstname: user.firstname,
+        surname: user.surname,
+      },
       token: await ctx.app.jwt.sign({
         data: {
           _id: user.email,
-          userId: user.id
+          userId: user.id,
+          firstname: user.firstname,
+          surname: user.surname,
         },
         exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
       }, ctx.app.config.jwt.secret),

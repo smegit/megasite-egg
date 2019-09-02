@@ -45,6 +45,7 @@ class Attribute extends Service {
       ctx.throw(404, 'attribute not found');
     }
 
+    console.info(payload);
     return attribute.update(payload, { userId: userId });
   }
 
